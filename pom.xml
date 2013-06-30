@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.surguy</groupId>
   <artifactId>scala-amazon-queue</artifactId>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2</version>
   <name>scala-amazon-queue</name>
   <description>Client code for using Amazon SQS to process files in Amazon S3</description>
   <url>https://github.com/inigo/scala-amazon-queue</url>
