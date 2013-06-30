@@ -53,7 +53,7 @@ class QueueSpec extends Specification {
       preparer.transferToStore(tempDir)
       preparer.populateQueue()
       store.listContents().toSet must beEqualTo(Set(f1.getName, f2.getName))
-      def processFn(input: InputStream) = new String(ByteStreams.toByteArray(input), Charsets.UTF_8)
+      def processFn(identifier: String, input: InputStream) = new String(ByteStreams.toByteArray(input), Charsets.UTF_8)
       consumer.processNextIdentifier(processFn) must beEqualTo(Some("Test text "+uniqueId))
       consumer.processNextIdentifier(processFn) must beEqualTo(Some("Test text "+uniqueId))
     }

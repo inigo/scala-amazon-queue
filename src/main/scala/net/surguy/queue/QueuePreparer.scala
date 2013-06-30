@@ -23,8 +23,8 @@ class QueuePreparer(val store: Store, val queue: Queue[_]) {
  * Processes each of the items in a queue, retrieving each from a store by its identifier and processing it.
  */
 class QueueConsumer[U](val store: Store, val queue: Queue[U]) {
-  def processNextIdentifier[T](fn: (InputStream => T)) = queue.nextIdentifier().map{ m =>
-    val result = fn(store.retrieveFromStore(m.identifier))
+  def processNextIdentifier[T](fn: ((String, InputStream) => T)) = queue.nextIdentifier().map{ m =>
+    val result = fn(m.identifier, store.retrieveFromStore(m.identifier))
     queue.removeMessage(m)
     result
   }
