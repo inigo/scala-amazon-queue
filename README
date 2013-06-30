@@ -11,6 +11,22 @@ Create a credentials file at src/main/resources/AwsCredentials.properties, with 
 
 The app is Scala, built with Maven. Build with "mvn install".
 
+Usage
+=====
+
+The purpose of this library is to make it easy to process a set of files
+stored on Amazon S3, potentially via a number of separate processors each
+working in parallel and getting the next file to process via Amazon SQS.
+
+Expected flow:
+    From a local computer, use QueuePreparer#transferToStore to upload a
+    local directory of files to Amazon S3, then use QueuePreparer#populateQueue
+    to add each of them to an Amazon SQS queue.
+
+    From a number of other computers (perhaps Amazon EC2 instances), repeatedly use
+    QueueConsumer#processNextIdentifier to retrieve the next item to process,
+    passing in an appropriate function to act on it.
+
 License
 =======
 
