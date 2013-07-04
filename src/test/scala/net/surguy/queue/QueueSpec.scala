@@ -33,12 +33,16 @@ class QueueSpec extends Specification {
   "accessing the queue" should {
     "support adding to and removing from the queue" in {
       queue.clearAll()
+      queue.countMessages() mustEqual 0
       queue.nextIdentifier() must beNone
       queue.add(uniqueId)
+      queue.countMessages() mustEqual 1
       val msg = queue.nextIdentifier()
       msg.map(_.identifier) must beEqualTo(Some(uniqueId))
       queue.nextIdentifier() must beNone
+      queue.countMessages() mustEqual 1
       queue.removeMessage(msg.get)
+      queue.countMessages() mustEqual 0
     }
   }
 

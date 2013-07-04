@@ -10,6 +10,7 @@ import com.amazonaws.services.s3.AmazonS3Client
 import scala.collection.JavaConversions._
 import scala.collection.mutable.ListBuffer
 import java.util.Random
+import java.util
 
 /**
  * Uploads a directory of local files to a queue and an associated file store.
@@ -48,7 +49,9 @@ class AmazonS3Store(val bucketName: String) extends Store {
   private val client = {
     val s3 = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider())
     s3.setRegion(Region.getRegion(Regions.US_WEST_2))
-    if (! s3.listBuckets().map( _.getName ).contains(bucketName)) s3.createBucket(bucketName)
+    if (!s3.listBuckets().map(_.getName).contains(bucketName)) {
+      s3.createBucket(bucketName)
+    }
     s3
   }
 
@@ -90,6 +93,16 @@ class AmazonSqsQueue(val queueName: String) extends Queue[String] {
     messages.headOption.map( m => new MessageWrapper(m.getBody, m.getReceiptHandle) )
   }
   def removeMessage(msg: MessageWrapper[String]) { client.deleteMessage(new DeleteMessageRequest(queueUrl, msg.messageHandle)) }
+
+  def countMessages() = {
+    val request = new GetQueueAttributesRequest(queueUrl)
+    request.setAttributeNames(List(QueueAttributeName.ApproximateNumberOfMessages.name,
+      QueueAttributeName.ApproximateNumberOfMessagesNotVisible.name))
+    val attributes = client.getQueueAttributes(request).getAttributes
+    attributes(QueueAttributeName.ApproximateNumberOfMessages.name).toInt +
+      attributes(QueueAttributeName.ApproximateNumberOfMessagesNotVisible.name).toInt
+  }
+
   def clearAll() {
     def getMessages = {
       val receiveMessageRequest = new ReceiveMessageRequest(queueUrl)
