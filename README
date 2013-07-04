@@ -1,16 +1,5 @@
 Client code for using Amazon SQS to process files in Amazon S3.
 
-Setup
-=====
-
-Create a credentials file at src/main/resources/AwsCredentials.properties, with the content:
-    accessKey=[your AWS access key]
-    secretKey={your AWS secret key]
-
-(you can get the keys from Amazon via http://aws.amazon.com/account/)
-
-The app is Scala, built with Maven. Build with "mvn install".
-
 Usage
 =====
 
@@ -26,6 +15,28 @@ Expected flow:
     From a number of other computers (perhaps Amazon EC2 instances), repeatedly use
     QueueConsumer#processNextIdentifier to retrieve the next item to process,
     passing in an appropriate function to act on it.
+
+Setup
+=====
+
+This library is deployed to Maven Central - get it with:
+
+        <dependency>
+            <groupId>net.surguy</groupId>
+            <artifactId>scala-amazon-queue</artifactId>
+            <version>0.3</version>
+        </dependency>
+
+Before using, create a credentials file at src/main/resources/AwsCredentials.properties, with the content:
+    accessKey=[your AWS access key]
+    secretKey={your AWS secret key]
+
+(you can get the keys from Amazon via http://aws.amazon.com/account/)
+
+Build
+=====
+
+The app is Scala, built with Maven. Build with "mvn install".
 
 License
 =======
