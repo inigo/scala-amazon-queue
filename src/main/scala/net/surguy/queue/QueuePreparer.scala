@@ -43,6 +43,7 @@ abstract class Queue[T] {
   def nextIdentifier(): Option[MessageWrapper[T]]
   def removeMessage(msg: MessageWrapper[T])
   def clearAll()
+  def countMessages: Int
 }
 
 class AmazonS3Store(val bucketName: String) extends Store {
@@ -94,7 +95,7 @@ class AmazonSqsQueue(val queueName: String) extends Queue[String] {
   }
   def removeMessage(msg: MessageWrapper[String]) { client.deleteMessage(new DeleteMessageRequest(queueUrl, msg.messageHandle)) }
 
-  def countMessages() = {
+  def countMessages = {
     val request = new GetQueueAttributesRequest(queueUrl)
     request.setAttributeNames(List(QueueAttributeName.ApproximateNumberOfMessages.name,
       QueueAttributeName.ApproximateNumberOfMessagesNotVisible.name))
